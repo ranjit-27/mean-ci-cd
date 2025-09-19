@@ -15,7 +15,7 @@ RUN npm run build -- --output-path=./dist/out --base-href=/  --configuration pro
 FROM node:20-alpine
 WORKDIR /app
 # COPY --from=build /app/dist/out ./
-COPY --from=build /app/dist/frontend/browser ./dist/out
+COPY --from=build /app/dist/frontend/browser ./dist/frontend/browser
 RUN npm install -g http-server
 # EXPOSE 4200
 # CMD ["http-server", "-p", "4200", "./"]
