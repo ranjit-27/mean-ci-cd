@@ -8,7 +8,7 @@ COPY . .
 ARG API_URL
 RUN echo "export const environment = { production: true, apiUrl: '${API_URL}' };" \
 > src/environments/environment.prod.ts
-RUN npm run build -- --output-path=./dist/out --base-href=/  --configuration production
+RUN npm run build -- --output-path=./dist/frontend/browser --base-href=/  --configuration production
  
 # We can use a lightweight server like Nginx for production,
 # but for simplicity, we'll use a simple http-server.
