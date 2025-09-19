@@ -16,7 +16,7 @@ app.use(express.json());
 import authRouter from "./routes/auth.js";
 app.use("/auth", authRouter);
 
-const uri = process.env.MONGO_URI || "mongodb://localhost:27017/ecommerce";
+const uri = process.env.MONGO_URI || "mongodb+srv://ranjithmadugula:<12345678>@cluster0.zhh59.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 mongoose.connect(uri)
   .then(() => console.log("MongoDB connected"))
