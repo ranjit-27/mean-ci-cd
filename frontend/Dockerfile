@@ -1,34 +1,27 @@
-# Stage 1: Build
+# frontend/Dockerfile
 FROM node:20-alpine as build
 WORKDIR /app
-
-# Install dependencies
 COPY package.json package-lock.json ./
 RUN npm install
-
-# Copy source
 COPY . .
-
 # Pass API_URL at build time
 ARG API_URL
 RUN echo "export const environment = { production: true, apiUrl: '${API_URL}' };" \
 > src/environments/environment.prod.ts
-
-# Build Angular app (default output: dist/frontend/browser)
-RUN npm run build -- --configuration production
-
-# Stage 2: Serve
+RUN npm run build -- --output-path=./dist/out --base-href=/  --configuration production
+ 
+# We can use a lightweight server like Nginx for production,
+# but for simplicity, we'll use a simple http-server.
 FROM node:20-alpine
 WORKDIR /app
-
-# Copy built files
+# COPY --from=build /app/dist/out ./
 COPY --from=build /app/dist/frontend/browser ./dist/frontend/browser
-
-# Install lightweight server
 RUN npm install -g http-server
-
-# Expose Render’s dynamic port
+# EXPOSE 4200
+# CMD ["http-server", "-p", "4200", "./"]
+# Expose Render’s dynamic port (not hardcoded)
 EXPOSE 8080
-
-# Start server
-CMD ["sh", "-c", "http-server ./dist/frontend/browser -p $PORT -P http://127.0.0.1:$PORT?"]
+ 
+# Use $PORT instead of 4200
+# CMD ["sh", "-c", "http-server ./dist/out -p $PORT"]
+CMD ["sh", "-c", "http-server ./dist/out -p $PORT -P http://127.0.0.1:$PORT?"]
